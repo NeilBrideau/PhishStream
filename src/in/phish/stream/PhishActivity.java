@@ -40,9 +40,9 @@ public class PhishActivity extends ListActivity {
 				
 		// Create list of menu items	
 		final ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
-		menu.add(new MenuItem("Years", 0, YearsActivity.class));
-		menu.add(new MenuItem("Songs", 1, null));
-		menu.add(new MenuItem("Current", 1, null));
+		menu.add(new MenuItem("Years", YearsActivity.class));
+		menu.add(new MenuItem("Songs", null));
+		menu.add(new MenuItem("Current", null));
 		
 		// Create adapter to turn list of strings into menu items
 		setListAdapter(new MenuItemArrayAdapter(this, android.R.layout.simple_list_item_1, menu));		
@@ -70,14 +70,19 @@ public class PhishActivity extends ListActivity {
 		private String  name;
 		private    int  id;
 		private Class<?> activity;
-		private MenuItem(String name, int id, Class<?> cls) {
-			this.name 		= name;
-			this.id 		= id;
+		private MenuItem(String name, Class<?> cls) {
+			this.name 		= name;			
 			this.activity 	= cls;
 			return;
 		}	
 		public Class<?> getActivity() { return activity; }		
 		public String toString() { return name; }
+		public int getId() {
+			return id;
+		}
+		public void setId(int id) {
+			this.id = id;
+		}
 	}
 	
 	// Associates id with a item view mIdMap
@@ -86,13 +91,17 @@ public class PhishActivity extends ListActivity {
 		
 		public MenuItemArrayAdapter(Context context, int textViewResourceId, List<MenuItem> objects) {
 			super(context, textViewResourceId, objects);			
-			for (int i = 0; i < objects.size(); ++i) 
-				mIdMap.put(objects.get(i).toString(), i);			
+			for (int i = 0; i < objects.size(); ++i) {
+				mIdMap.put(objects.get(i).toString(), i);
+				objects.get(i).setId(i);
+			}
+			return;
 		}
 		
 		@Override
 		public long getItemId(int position) {
 			MenuItem item = getItem(position);
+			item.getId();
 			return mIdMap.get(item.toString());
 		}
 		
