@@ -18,7 +18,8 @@ import com.octo.android.robospice.persistence.springandroid.json.gson.GsonObject
 /**
  * A {@link SpringAndroidSpiceService} dedicated to json web services via gson.
  * Provides caching.
- * @author sni
+ * Added media type text/html because phish.in does not return correct 
+ * json content-type.
  */
 public class PhishInGsonSpringAndroidSpiceService extends SpringAndroidSpiceService {
 	

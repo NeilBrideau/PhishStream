@@ -1,10 +1,12 @@
 package in.phish.stream.phishin;
 
-public class ErasResponse {
+import java.util.List;
+
+public class ShowsResponse {
 	public boolean success;
 	public int total_entries;
 	public int total_pages;
 	public int page;
-	public Eras data;
+	public List<Show> data;
 }
 

@@ -41,8 +41,10 @@ public class PhishActivity extends ListActivity {
 		// Create list of menu items	
 		final ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
 		menu.add(new MenuItem("Years", YearsActivity.class));
+		menu.add(new MenuItem("Tours", null));
+		menu.add(new MenuItem("Venues", null));
 		menu.add(new MenuItem("Songs", null));
-		menu.add(new MenuItem("Current", null));
+		menu.add(new MenuItem("Current Playlist", null));
 		
 		// Create adapter to turn list of strings into menu items
 		setListAdapter(new MenuItemArrayAdapter(this, android.R.layout.simple_list_item_1, menu));		
@@ -60,7 +62,7 @@ public class PhishActivity extends ListActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) { 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
