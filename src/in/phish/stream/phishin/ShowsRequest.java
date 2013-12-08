@@ -12,7 +12,7 @@ public class ShowsRequest extends SpringAndroidSpiceRequest<ShowsResponse> {
     }
 
     @Override
-    public ShowsResponse loadDataFromNetwork() throws Exception {
+    public ShowsResponse loadDataFromNetwork() throws Exception {		  
         return getRestTemplate().getForObject("http://phish.in/api/v1/years/" + year, ShowsResponse.class);
     }
 

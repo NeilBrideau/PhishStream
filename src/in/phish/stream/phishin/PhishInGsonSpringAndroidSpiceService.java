@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +34,7 @@ public class PhishInGsonSpringAndroidSpiceService extends SpringAndroidSpiceServ
     @Override
     public RestTemplate createRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-
+        
         // web services support json responses
         GsonHttpMessageConverter jsonConverter = new GsonHttpMessageConverter();
 
@@ -43,6 +44,11 @@ public class PhishInGsonSpringAndroidSpiceService extends SpringAndroidSpiceServ
         
         final List<HttpMessageConverter<?>> listHttpMessageConverters = restTemplate.getMessageConverters();
         listHttpMessageConverters.add(jsonConverter);
+        
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+        interceptors.add(new AcceptHeaderHttpClientInterceptor());
+        restTemplate.setInterceptors(interceptors);
+        
         restTemplate.setMessageConverters(listHttpMessageConverters);
         return restTemplate;
     }

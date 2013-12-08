@@ -1,12 +1,11 @@
 package in.phish.stream;
 
-import in.phish.stream.phishin.Show;
 import in.phish.stream.phishin.ShowDetail;
 import in.phish.stream.phishin.ShowDetailRequest;
 import in.phish.stream.phishin.ShowDetailResponse;
-import in.phish.stream.phishin.ShowsRequest;
-import in.phish.stream.phishin.ShowsResponse;
+import in.phish.stream.phishin.Track;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -23,15 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ShowActivity extends PhishInRestListActivity {
+	protected ShowDetail show;
 	
 	protected void performRequest() {
 		displayProgressBar();
 		Intent i = getIntent();
-		
-		setTitle(Integer.toString(i.getIntExtra("Year", 666)));
-		
-		
-		ShowDetailRequest request = new ShowDetailRequest(i.getIntExtra("Show", 666));
+		setTitle(i.getStringExtra("Date"));
+		ShowDetailRequest request = new ShowDetailRequest(i.getIntExtra("ShowId", 666));
 		String lastRequestCacheKey = request.createCacheKey();
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_DAY, new ShowDetailRequestListener());		
 		return;
@@ -61,33 +58,59 @@ public class ShowActivity extends PhishInRestListActivity {
 		
 		@Override
 		public void onRequestSuccess(ShowDetailResponse shows) {			
-			ShowDetailAdapter adapter = new ShowDetailAdapter(outer, shows.data);
+			ShowDetail show = shows.data;
+			List<MenuItem> menu = new ArrayList<MenuItem>();
+			
+			// TODO Add a venue activity
+			menu.add(new MenuItem(show.venue.name, null));
+			for (Track t : show.tracks) 				
+				menu.add(new MenuItem(t.title, null));			
+			
+			ShowDetailAdapter adapter = new ShowDetailAdapter(outer, menu);
 			setListAdapter(adapter);			
 			hideProgressBar();
 			return;
 		}
 	}
 	
-	private class ShowDetailAdapter extends ArrayAdapter<ShowDetail> {
+	private class MenuItem {
+		private String  name;
+		private    int  id;
+		private Class<?> activity;
+		private MenuItem(String name, Class<?> cls) {
+			this.name 		= name;			
+			this.activity 	= cls;
+			return;
+		}	
+		public Class<?> getActivity() { return activity; }		
+		public String toString() { return name; }
+		public int getId() {
+			return id;
+		}
+		public void setId(int id) {
+			this.id = id;
+		}
+	}
+	
+	private class ShowDetailAdapter extends ArrayAdapter<MenuItem> {
 		private final Context context;
-		private final List<ShowDetail> shows;
+		private final List<MenuItem> items;
 		
-		public ShowDetailAdapter(Context context, ShowDetail shows) {
-			super(context, android.R.layout.simple_list_item_2, shows);
+		public ShowDetailAdapter(Context context, List<MenuItem> mi) {
+			super(context, android.R.layout.simple_list_item_1, mi);
 			this.context = context;
-			this.shows = shows;
+			this.items = mi;
 			return;
 		}
 		
 		@Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View showView = inflater.inflate(android.R.layout.simple_list_item_2, parent, false);
-            TextView date  = (TextView)showView.findViewById(android.R.id.text1);
-            TextView venue = (TextView)showView.findViewById(android.R.id.text2);
-            /*ShowDetail show = shows.get(position);
-            date.setText(show.date);
-            venue.setText(show.location + " - " + show.venue_name);*/
+            View showView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            TextView text  = (TextView)showView.findViewById(android.R.id.text1);            
+            MenuItem mi = items.get(position);
+            
+            text.setText(mi.toString());                        
             
 			return showView;
 		}

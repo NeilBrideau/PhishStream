@@ -32,6 +32,11 @@
             android:name="in.phish.stream.ShowsActivity"
             android:label="@string/title_activity_years" 
             android:parentActivityName="in.phish.stream.YearsActivity">
+        </activity>
+        <activity
+            android:name="in.phish.stream.ShowActivity"
+            android:label="@string/title_activity_years" 
+            android:parentActivityName="in.phish.stream.ShowsActivity">
         </activity> 
         <service
   			android:name="in.phish.stream.phishin.PhishInGsonSpringAndroidSpiceService"

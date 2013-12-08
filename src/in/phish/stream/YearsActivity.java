@@ -89,7 +89,9 @@ public class YearsActivity extends PhishInRestListActivity {
 						eralist.add(new EraRow(false, Integer.parseInt(year), Integer.parseInt(year)));					
 				}				
 			}			
-			setListAdapter(new ErasAdapter(outer, eralist));			
+			setListAdapter(new ErasAdapter(outer, eralist));	
+			if (listState != null)
+				getListView().onRestoreInstanceState(listState);
 			hideProgressBar();
 			return;
 		}

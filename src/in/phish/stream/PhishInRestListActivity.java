@@ -4,6 +4,7 @@ import in.phish.stream.phishin.PhishInGsonSpringAndroidSpiceService;
 
 import com.octo.android.robospice.SpiceManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.app.ListActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -14,6 +15,32 @@ import android.widget.LinearLayout;
 abstract public class PhishInRestListActivity extends ListActivity {
 	protected SpiceManager spiceManager = new SpiceManager(PhishInGsonSpringAndroidSpiceService.class);
 	private   LinearLayout progressBar;	
+	private String LIST_STATE = this.getClass().toString();
+	protected Parcelable listState = null;
+	
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+	    super.onRestoreInstanceState(state);
+	    listState = state.getParcelable(LIST_STATE);
+	    return;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+	    super.onSaveInstanceState(state);
+	    listState = getListView().onSaveInstanceState();
+	    state.putParcelable(LIST_STATE, listState);
+	    return;
+	}
+	
+	@Override 
+	protected void onResume() {
+		super.onResume();
+		if (listState != null)
+	        getListView().onRestoreInstanceState(listState);	    	
+		return;
+	}
 	
 	@Override
 	protected void onStart() {
@@ -57,7 +84,11 @@ abstract public class PhishInRestListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);				
 		setContentView(R.layout.activity_years);		
 		progressBar = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
-        performRequest();
+		
+		// Only perform the update if the list adapted has not been set 
+		if (getListAdapter() == null) 
+			performRequest();
+		
 		return;
 	}
  

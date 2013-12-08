@@ -38,8 +38,8 @@ public class ShowsActivity extends PhishInRestListActivity {
 		Show show = (Show)l.getAdapter().getItem(position);
 		if (show == null) return;
 		Intent intent = new Intent(v.getContext(), ShowActivity.class);		
-		intent.putExtra("Show", show.id);
-		intent.putExtra("Year", show.date);
+		intent.putExtra("ShowId", show.id);
+		intent.putExtra("Date", show.date);
         startActivity(intent);
         overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
 		return;
