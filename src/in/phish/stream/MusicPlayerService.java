@@ -3,15 +3,26 @@ package in.phish.stream;
 import java.io.IOException;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-public class MusicPlayerService extends Service implements MediaPlayer.OnPreparedListener {
-    private static final String ACTION_PLAY = "PLAY";
+public class MusicPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
+    public static final String ACTION_PLAY  = "PLAY";
+    public static final String ACTION_PAUSE = "PAUSE";
+    public static final String ACTION_STOP  = "STOP";
+    public static final String ACTION_NEXT  = "NEXT";
+    public static final String ACTION_PREV  = "PREV";
+
     MediaPlayer mediaPlayer = null;
+    WifiLock wifiLock = null;
+
     // This is the object that receives interactions from clients.  See
     // RemoteService for a more complete example.
     private final IBinder binder = new LocalBinder();
@@ -34,11 +45,37 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         return binder;
     }
     
+    public void initMediaPlayer() {
+        if (mediaPlayer != null) 
+            return;
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        wifiLock = ((WifiManager)getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+
+        return;
+    }   
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {        
+    public void onDestroy() {
+        if (mediaPlayer != null) 
+            mediaPlayer.release();
+        if (wifiLock != null) 
+            wifiLock.release();
+        mediaPlayer = null;
+        return;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {      
+        initMediaPlayer();
+
         if (intent.getAction().equals(ACTION_PLAY)) {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (mediaPlayer.isPlaying()) 
+                mediaPlayer.stop();
+            
             try {
                 mediaPlayer.setDataSource(intent.getStringExtra("URL"));
             } catch (IllegalArgumentException e) {
@@ -54,15 +91,37 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            mediaPlayer.setOnPreparedListener(this);
+            wifiLock.acquire();
             mediaPlayer.prepareAsync(); // prepare async to not block main thread
         }
         return START_STICKY;
     }
+    
+    @Override 
+    public void onCompletion(MediaPlayer mp) {
+        // TODO Next track?
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+        wifiLock.release();
+        return;
+    }
+
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+        wifiLock.release();
+        return true;
+    }
 
     /** Called when MediaPlayer is ready */
+    @Override
     public void onPrepared(MediaPlayer player) {
-        player.start();
+        mediaPlayer.start();
+        return;
     }
 
 
