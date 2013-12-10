@@ -24,8 +24,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author corn
+ *
+ */
 public class YearsActivity extends PhishInRestListActivity {	
 		
+	/* (non-Javadoc)
+	 * @see in.phish.stream.PhishInRestListActivity#performRequest()
+	 */
 	@Override
 	protected void performRequest() {					
 		displayProgressBar();
@@ -35,6 +42,9 @@ public class YearsActivity extends PhishInRestListActivity {
 		return;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		EraRow er = (EraRow)l.getAdapter().getItem(position);
@@ -47,9 +57,19 @@ public class YearsActivity extends PhishInRestListActivity {
 		return;
 	}
 
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ErasRequestListener implements RequestListener<ErasResponse> {
+		/**
+		 * 
+		 */
 		final YearsActivity outer = YearsActivity.this;
 
+		/* (non-Javadoc)
+		 * @see com.octo.android.robospice.request.listener.RequestListener#onRequestFailure(com.octo.android.robospice.persistence.exception.SpiceException)
+		 */
 		@Override
 		public void onRequestFailure(SpiceException e) {			
 			hideProgressBar();
@@ -57,6 +77,9 @@ public class YearsActivity extends PhishInRestListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.octo.android.robospice.request.listener.RequestListener#onRequestSuccess(java.lang.Object)
+		 */
 		@Override
 		public void onRequestSuccess(ErasResponse eras) {			
 			List<EraRow> eralist = new ArrayList<EraRow>();			
@@ -98,6 +121,10 @@ public class YearsActivity extends PhishInRestListActivity {
 		}
 	}
 
+	/**
+	 * @author corn
+	 *
+	 */
 	private class EraRow {
 		private boolean isEra;
 		private int yearStart;
@@ -122,10 +149,24 @@ public class YearsActivity extends PhishInRestListActivity {
 		}
 	}
 	
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ErasAdapter extends ArrayAdapter<EraRow> {
+		/**
+		 * 
+		 */
 		private final Context context;
+		/**
+		 * 
+		 */
 		private final List<EraRow> eras;
 		
+		/**
+		 * @param context
+		 * @param eras
+		 */
 		public ErasAdapter(Context context, List<EraRow> eras) {
 			super(context, android.R.layout.simple_list_item_1, eras);
 			this.context = context;
@@ -133,6 +174,9 @@ public class YearsActivity extends PhishInRestListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+		 */
 		@Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -156,6 +200,9 @@ public class YearsActivity extends PhishInRestListActivity {
 			return rowView;
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.BaseAdapter#isEnabled(int)
+		 */
 		@Override
 		public boolean isEnabled(int position) {
 			return !eras.get(position).isEra(); 

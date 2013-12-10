@@ -22,8 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ShowActivity extends PhishInRestListActivity {
+	/**
+	 * 
+	 */
 	protected ShowDetail show;
 	
+	/* (non-Javadoc)
+	 * @see in.phish.stream.PhishInRestListActivity#performRequest()
+	 */
 	protected void performRequest() {
 		displayProgressBar();
 		Intent i = getIntent();
@@ -33,9 +39,10 @@ public class ShowActivity extends PhishInRestListActivity {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_DAY, new ShowDetailRequestListener());		
 		return;
 	}		
-	
-	
-	
+		
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		//EraRow er = (EraRow)l.getAdapter().getItem(position);
@@ -47,7 +54,10 @@ public class ShowActivity extends PhishInRestListActivity {
 		return;
 	}
 
-	// inner class of your spiced Activity
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ShowDetailRequestListener implements RequestListener<ShowDetailResponse> {
 		final ShowActivity outer = ShowActivity.this;
 
@@ -75,6 +85,10 @@ public class ShowActivity extends PhishInRestListActivity {
 		}
 	}
 	
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ListMenuItem {
 		private String  name;
 		private    int  id;
@@ -94,10 +108,18 @@ public class ShowActivity extends PhishInRestListActivity {
 		}
 	}
 	
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ShowDetailAdapter extends ArrayAdapter<ListMenuItem> {
 		private final Context context;
 		private final List<ListMenuItem> items;
 		
+		/**
+		 * @param context
+		 * @param mi
+		 */
 		public ShowDetailAdapter(Context context, List<ListMenuItem> mi) {
 			super(context, android.R.layout.simple_list_item_1, mi);
 			this.context = context;
@@ -105,6 +127,9 @@ public class ShowActivity extends PhishInRestListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+		 */
 		@Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

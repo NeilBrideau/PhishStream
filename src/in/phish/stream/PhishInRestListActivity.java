@@ -11,13 +11,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+/**
+ * @author corn
+ *
+ */
 abstract public class PhishInRestListActivity extends ListActivity {
-	protected SpiceManager spiceManager = new SpiceManager(PhishInGsonSpringAndroidSpiceService.class);
+	/**
+	 * 
+	 */
+	protected SpiceManager spiceManager = new SpiceManager(PhishInGsonSpringAndroidSpiceService.class);	// 
+	/**
+	 * 
+	 */
 	private   LinearLayout progressBar;	
+	/**
+	 * 
+	 */
 	private String LIST_STATE = this.getClass().toString();
+	/**
+	 * 
+	 */
 	protected Parcelable listState = null;
 	
 	
+	/** Restore list scroll position 
+	 * @param state Application state
+	 * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
 	    super.onRestoreInstanceState(state);
@@ -25,6 +45,10 @@ abstract public class PhishInRestListActivity extends ListActivity {
 	    return;
 	}
 
+	/** Save our scroll position
+	 * @param state Application state
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 	    super.onSaveInstanceState(state);
@@ -33,6 +57,9 @@ abstract public class PhishInRestListActivity extends ListActivity {
 	    return;
 	}
 	
+	/** Resume application and reset our scroll position
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override 
 	protected void onResume() {
 		super.onResume();
@@ -41,6 +68,10 @@ abstract public class PhishInRestListActivity extends ListActivity {
 		return;
 	}
 	
+	
+	/** Start the spice manager
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
 	  super.onStart();
@@ -48,13 +79,19 @@ abstract public class PhishInRestListActivity extends ListActivity {
       return;
 	}
 
+	/** Tell spice manager it can stop
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	protected void onStop() {
-	  spiceManager.shouldStop();
-	  super.onStop();
-      return;
+		spiceManager.shouldStop();
+		super.onStop();
+		return;
 	}
 	
+	/** Overide activity animation
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 	    super.onBackPressed();
@@ -62,12 +99,21 @@ abstract public class PhishInRestListActivity extends ListActivity {
 	    return;
 	}
 	
+	/** Create options menu
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
+		
 	}
 	
+	/** Override animation and close properly to resume previous activity
+	 * @param item Menu item chosen
+	 * @return  
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {        	
@@ -79,32 +125,41 @@ abstract public class PhishInRestListActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
 	}
 
+	/** Start our activity and perform REST request
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);				
 		setContentView(R.layout.activity_years);		
 		progressBar = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
-		
-		// Only perform the update if the list adapted has not been set 
-		if (getListAdapter() == null) 
-			performRequest();
-		
+		performRequest();		
 		return;
 	}
  
+	/** Check if progress bar is visible
+	 * @return
+	 */
 	protected int checkProgressBar() {
 		return progressBar.getVisibility();		
 	}
 	
+    /** Force progress bar to be visible
+     */
     protected void displayProgressBar() {
 		progressBar.setVisibility(View.VISIBLE);
         return;
     }
 
+    /** Force progress bar to hide
+     */
     protected void hideProgressBar() {
 		progressBar.setVisibility(View.GONE);
         return;
     }
 
+    
+    /** Override this and perform spice requests.
+     */
     abstract protected void performRequest();        
 }

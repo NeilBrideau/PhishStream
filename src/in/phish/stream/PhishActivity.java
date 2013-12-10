@@ -18,21 +18,34 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+/**
+ * @author corn
+ *
+ */
 public class PhishActivity extends ListActivity {
 	protected SpiceManager spiceManager = new SpiceManager(PhishInGsonSpringAndroidSpiceService.class);
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
 	  super.onStart();
 	  spiceManager.start(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 	  spiceManager.shouldStop();
 	  super.onStop();
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,6 +64,9 @@ public class PhishActivity extends ListActivity {
 	    return;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		MenuItem mi = (MenuItem)l.getAdapter().getItem(position);
@@ -61,6 +77,9 @@ public class PhishActivity extends ListActivity {
 		return;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) { 
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -68,6 +87,10 @@ public class PhishActivity extends ListActivity {
 		return true;
 	}
 	
+	/**
+	 * @author corn
+	 *
+	 */
 	private class MenuItem {
 		private String  name;
 		private    int  id;
@@ -88,6 +111,10 @@ public class PhishActivity extends ListActivity {
 	}
 	
 	// Associates id with a item view mIdMap
+	/**
+	 * @author corn
+	 *
+	 */
 	private class MenuItemArrayAdapter extends ArrayAdapter<MenuItem> {
 		private HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 		
@@ -100,6 +127,9 @@ public class PhishActivity extends ListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.ArrayAdapter#getItemId(int)
+		 */
 		@Override
 		public long getItemId(int position) {
 			MenuItem item = getItem(position);
@@ -107,6 +137,9 @@ public class PhishActivity extends ListActivity {
 			return mIdMap.get(item.toString());
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.BaseAdapter#hasStableIds()
+		 */
 		@Override
 		public boolean hasStableIds() {
 			return true;

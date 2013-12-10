@@ -22,9 +22,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author corn
+ *
+ */
 public class ShowsActivity extends PhishInRestListActivity {
+	/**
+	 * 
+	 */
 	List<Show> showList;
 	
+	/* (non-Javadoc)
+	 * @see in.phish.stream.PhishInRestListActivity#performRequest()
+	 */
 	protected void performRequest() {
 		displayProgressBar();
 		Intent i = getIntent();
@@ -56,6 +66,9 @@ public class ShowsActivity extends PhishInRestListActivity {
 		return;
 	}		
 
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		Show show = (Show)l.getAdapter().getItem(position);
@@ -69,9 +82,19 @@ public class ShowsActivity extends PhishInRestListActivity {
 	}
 
 	// inner class of your spiced Activity
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ShowsRequestListener implements RequestListener<ShowsResponse> {
+		/**
+		 * 
+		 */
 		final ShowsActivity outer = ShowsActivity.this;
 
+		/* (non-Javadoc)
+		 * @see com.octo.android.robospice.request.listener.RequestListener#onRequestFailure(com.octo.android.robospice.persistence.exception.SpiceException)
+		 */
 		@Override
 		public void onRequestFailure(SpiceException e) {			
 			hideProgressBar();
@@ -79,6 +102,9 @@ public class ShowsActivity extends PhishInRestListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.octo.android.robospice.request.listener.RequestListener#onRequestSuccess(java.lang.Object)
+		 */
 		@Override
 		public void onRequestSuccess(ShowsResponse shows) {	
 			for (Show show : shows.data) 
@@ -96,10 +122,24 @@ public class ShowsActivity extends PhishInRestListActivity {
 		}
 	}
 	
+	/**
+	 * @author corn
+	 *
+	 */
 	private class ShowsAdapter extends ArrayAdapter<Show> {
+		/**
+		 * 
+		 */
 		private final Context context;
+		/**
+		 * 
+		 */
 		private final List<Show> shows;
 		
+		/**
+		 * @param context
+		 * @param shows
+		 */
 		public ShowsAdapter(Context context, List<Show> shows) {
 			super(context, android.R.layout.simple_list_item_2, shows);
 			this.context = context;
@@ -107,6 +147,9 @@ public class ShowsActivity extends PhishInRestListActivity {
 			return;
 		}
 		
+		/* (non-Javadoc)
+		 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+		 */
 		@Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
