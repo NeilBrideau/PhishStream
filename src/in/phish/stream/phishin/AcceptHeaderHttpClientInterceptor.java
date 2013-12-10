@@ -15,8 +15,7 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class AcceptHeaderHttpClientInterceptor  implements ClientHttpRequestInterceptor {
 
-	
-    /* (non-Javadoc)
+    /** Add the accept header required by phish.in API.
      * @see org.springframework.http.client.ClientHttpRequestInterceptor#intercept(org.springframework.http.HttpRequest, byte[], org.springframework.http.client.ClientHttpRequestExecution)
      */
     @Override

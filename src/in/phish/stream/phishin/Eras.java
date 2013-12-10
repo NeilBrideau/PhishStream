@@ -2,9 +2,9 @@ package in.phish.stream.phishin;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
+/** Eras response. 
+ * Had to do this a little funny.
  * @author corn
- *
  */
 public class Eras {
 	@SerializedName("1.0") 

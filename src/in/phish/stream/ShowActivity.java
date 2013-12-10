@@ -13,6 +13,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,15 @@ public class ShowActivity extends PhishInRestListActivity {
 	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-		//EraRow er = (EraRow)l.getAdapter().getItem(position);
-		//if (er == null)// || er.getActivity() == null)
-		//	return;
-		//Log.e("LISTCLICK", er.toString());
+	       
+	    ListMenuItem mi = (ListMenuItem) l.getAdapter().getItem(position);
+		if (mi == null || mi.getUrl() == null)
+			return;
+		Log.e("LISTCLICK", mi.getUrl());
+		Intent i = new Intent(v.getContext(), MusicPlayerService.class);  
+		i.putExtra("URL", mi.getUrl());
+		i.setAction("PLAY");
+		startService(i);
         //startActivity(new Intent(v.getContext(), er.getActivity()));
         //overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
 		return;
@@ -76,7 +82,7 @@ public class ShowActivity extends PhishInRestListActivity {
 			// TODO Add a venue activity
 			menu.add(new ListMenuItem(show.venue.name, null));
 			for (Track t : show.tracks) 				
-				menu.add(new ListMenuItem(t.title, null));			
+				menu.add(new ListMenuItem(t.title, t.mp3));			
 			
 			ShowDetailAdapter adapter = new ShowDetailAdapter(outer, menu);
 			setListAdapter(adapter);			
@@ -92,13 +98,13 @@ public class ShowActivity extends PhishInRestListActivity {
 	private class ListMenuItem {
 		private String  name;
 		private    int  id;
-		private Class<?> activity;
-		private ListMenuItem(String name, Class<?> cls) {
-			this.name 		= name;			
-			this.activity 	= cls;
+		private String url;		
+		private ListMenuItem(String name, String url) {
+			this.name 	= name;			
+			this.url    = url;
 			return;
 		}	
-		public Class<?> getActivity() { return activity; }		
+				
 		public String toString() { return name; }
 		public int getId() {
 			return id;
@@ -106,6 +112,10 @@ public class ShowActivity extends PhishInRestListActivity {
 		public void setId(int id) {
 			this.id = id;
 		}
+		public String getUrl() {
+		    return url;
+		}
+		
 	}
 	
 	/**
