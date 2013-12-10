@@ -24,6 +24,9 @@ import com.octo.android.robospice.persistence.springandroid.json.gson.GsonObject
  */
 public class PhishInGsonSpringAndroidSpiceService extends SpringAndroidSpiceService {
 	
+    /* (non-Javadoc)
+     * @see com.octo.android.robospice.SpiceService#createCacheManager(android.app.Application)
+     */
     @Override
     public CacheManager createCacheManager(Application application) throws CacheCreationException {
         CacheManager cacheManager = new CacheManager();
@@ -31,6 +34,9 @@ public class PhishInGsonSpringAndroidSpiceService extends SpringAndroidSpiceServ
         return cacheManager;
     }
 
+    /* (non-Javadoc)
+     * @see com.octo.android.robospice.SpringAndroidSpiceService#createRestTemplate()
+     */
     @Override
     public RestTemplate createRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();

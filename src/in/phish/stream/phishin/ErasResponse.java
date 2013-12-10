@@ -1,5 +1,9 @@
 package in.phish.stream.phishin;
 
+/**
+ * @author corn
+ *
+ */
 public class ErasResponse {
 	public boolean success;
 	public int total_entries;

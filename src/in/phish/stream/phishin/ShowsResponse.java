@@ -2,6 +2,10 @@ package in.phish.stream.phishin;
 
 import java.util.List;
 
+/**
+ * @author corn
+ *
+ */
 public class ShowsResponse {
 	public boolean success;
 	public int total_entries;

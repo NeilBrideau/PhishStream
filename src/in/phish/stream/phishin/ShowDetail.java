@@ -2,6 +2,10 @@ package in.phish.stream.phishin;
 
 import java.util.List;
 
+/**
+ * @author corn
+ *
+ */
 public class ShowDetail {
     public int id;
     public String date;

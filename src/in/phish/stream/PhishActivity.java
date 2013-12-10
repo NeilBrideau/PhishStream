@@ -52,12 +52,12 @@ public class PhishActivity extends ListActivity {
 		setContentView(R.layout.activity_home);
 				
 		// Create list of menu items	
-		final ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
-		menu.add(new MenuItem("Years", YearsActivity.class));
-		menu.add(new MenuItem("Tours", null));
-		menu.add(new MenuItem("Venues", null));
-		menu.add(new MenuItem("Songs", null));
-		menu.add(new MenuItem("Current Playlist", null));
+		final ArrayList<ListMenuItem> menu = new ArrayList<ListMenuItem>();
+		menu.add(new ListMenuItem("Years", YearsActivity.class));
+		menu.add(new ListMenuItem("Tours", null));
+		menu.add(new ListMenuItem("Venues", null));
+		menu.add(new ListMenuItem("Songs", null));
+		menu.add(new ListMenuItem("Current Playlist", null));
 		
 		// Create adapter to turn list of strings into menu items
 		setListAdapter(new MenuItemArrayAdapter(this, android.R.layout.simple_list_item_1, menu));		
@@ -69,7 +69,7 @@ public class PhishActivity extends ListActivity {
 	 */
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-		MenuItem mi = (MenuItem)l.getAdapter().getItem(position);
+		ListMenuItem mi = (ListMenuItem)l.getAdapter().getItem(position);
 		if (mi == null || mi.getActivity() == null)
 			return;
         startActivity(new Intent(v.getContext(), mi.getActivity()));
@@ -91,11 +91,11 @@ public class PhishActivity extends ListActivity {
 	 * @author corn
 	 *
 	 */
-	private class MenuItem {
+	private class ListMenuItem {
 		private String  name;
 		private    int  id;
 		private Class<?> activity;
-		private MenuItem(String name, Class<?> cls) {
+		private ListMenuItem(String name, Class<?> cls) {
 			this.name 		= name;			
 			this.activity 	= cls;
 			return;
@@ -115,10 +115,10 @@ public class PhishActivity extends ListActivity {
 	 * @author corn
 	 *
 	 */
-	private class MenuItemArrayAdapter extends ArrayAdapter<MenuItem> {
+	private class MenuItemArrayAdapter extends ArrayAdapter<ListMenuItem> {
 		private HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 		
-		public MenuItemArrayAdapter(Context context, int textViewResourceId, List<MenuItem> objects) {
+		public MenuItemArrayAdapter(Context context, int textViewResourceId, List<ListMenuItem> objects) {
 			super(context, textViewResourceId, objects);			
 			for (int i = 0; i < objects.size(); ++i) {
 				mIdMap.put(objects.get(i).toString(), i);
@@ -132,7 +132,7 @@ public class PhishActivity extends ListActivity {
 		 */
 		@Override
 		public long getItemId(int position) {
-			MenuItem item = getItem(position);
+			ListMenuItem item = getItem(position);
 			item.getId();
 			return mIdMap.get(item.toString());
 		}

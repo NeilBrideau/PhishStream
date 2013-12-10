@@ -2,6 +2,10 @@ package in.phish.stream.phishin;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * @author corn
+ *
+ */
 public class Eras {
 	@SerializedName("1.0") 
 	public String[] one;

@@ -1,5 +1,9 @@
 package in.phish.stream.phishin;
 
+/**
+ * @author corn
+ *
+ */
 public class Venue {
     public int id;
     public String name;

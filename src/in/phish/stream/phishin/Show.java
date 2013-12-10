@@ -5,6 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * @author corn
+ *
+ */
 public class Show implements Comparable<Show> {
     public int id;
     public String date;
@@ -19,6 +23,9 @@ public class Show implements Comparable<Show> {
     public String venue_name;
     public String location;
     
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Show show) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);		
