@@ -33,7 +33,9 @@ public class ShowActivity extends PhishInRestListActivity {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_DAY, new ShowDetailRequestListener());		
 		return;
 	}		
-
+	
+	
+	
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		//EraRow er = (EraRow)l.getAdapter().getItem(position);
@@ -59,12 +61,12 @@ public class ShowActivity extends PhishInRestListActivity {
 		@Override
 		public void onRequestSuccess(ShowDetailResponse shows) {			
 			ShowDetail show = shows.data;
-			List<MenuItem> menu = new ArrayList<MenuItem>();
+			List<ListMenuItem> menu = new ArrayList<ListMenuItem>();
 			
 			// TODO Add a venue activity
-			menu.add(new MenuItem(show.venue.name, null));
+			menu.add(new ListMenuItem(show.venue.name, null));
 			for (Track t : show.tracks) 				
-				menu.add(new MenuItem(t.title, null));			
+				menu.add(new ListMenuItem(t.title, null));			
 			
 			ShowDetailAdapter adapter = new ShowDetailAdapter(outer, menu);
 			setListAdapter(adapter);			
@@ -73,11 +75,11 @@ public class ShowActivity extends PhishInRestListActivity {
 		}
 	}
 	
-	private class MenuItem {
+	private class ListMenuItem {
 		private String  name;
 		private    int  id;
 		private Class<?> activity;
-		private MenuItem(String name, Class<?> cls) {
+		private ListMenuItem(String name, Class<?> cls) {
 			this.name 		= name;			
 			this.activity 	= cls;
 			return;
@@ -92,11 +94,11 @@ public class ShowActivity extends PhishInRestListActivity {
 		}
 	}
 	
-	private class ShowDetailAdapter extends ArrayAdapter<MenuItem> {
+	private class ShowDetailAdapter extends ArrayAdapter<ListMenuItem> {
 		private final Context context;
-		private final List<MenuItem> items;
+		private final List<ListMenuItem> items;
 		
-		public ShowDetailAdapter(Context context, List<MenuItem> mi) {
+		public ShowDetailAdapter(Context context, List<ListMenuItem> mi) {
 			super(context, android.R.layout.simple_list_item_1, mi);
 			this.context = context;
 			this.items = mi;
@@ -108,7 +110,7 @@ public class ShowActivity extends PhishInRestListActivity {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View showView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
             TextView text  = (TextView)showView.findViewById(android.R.id.text1);            
-            MenuItem mi = items.get(position);
+            ListMenuItem mi = items.get(position);
             
             text.setText(mi.toString());                        
             

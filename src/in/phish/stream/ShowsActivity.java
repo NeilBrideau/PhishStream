@@ -4,6 +4,8 @@ import in.phish.stream.phishin.Show;
 import in.phish.stream.phishin.ShowsRequest;
 import in.phish.stream.phishin.ShowsResponse;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -11,6 +13,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +23,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ShowsActivity extends PhishInRestListActivity {
+	List<Show> showList;
 	
 	protected void performRequest() {
 		displayProgressBar();
 		Intent i = getIntent();
-		setTitle(Integer.toString(i.getIntExtra("StartYear", 666)));
+		int startYear = 0;
+		int endYear = 0;
+		
+		if (i.getIntExtra("StartYear", 0) != 0) 
+			startYear = i.getIntExtra("StartYear", 0);
+		if (i.getIntExtra("EndYear", 0) != 0) 
+			endYear = i.getIntExtra("EndYear", 0);
+		else 
+			endYear = startYear;
+		
+		if (startYear != endYear) 
+			setTitle(Integer.toString(startYear) + " - " + Integer.toString(endYear));
+		else 
+			setTitle(Integer.toString(startYear));
+		
+		
+		showList = new ArrayList<Show>();
+		
 		// TODO We need to check that end year != start year in the event
 		// we need to load multiple years i.e. 1983-1987
-		ShowsRequest request = new ShowsRequest(i.getIntExtra("StartYear", 666));
-		String lastRequestCacheKey = request.createCacheKey();
-		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_DAY, new ShowsRequestListener());		
+		for (int year = startYear; year <= endYear; year++) {
+			ShowsRequest request = new ShowsRequest(year);
+			String lastRequestCacheKey = request.createCacheKey();
+			spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_DAY, new ShowsRequestListener());
+		}
 		return;
 	}		
 
@@ -57,10 +80,18 @@ public class ShowsActivity extends PhishInRestListActivity {
 		}
 		
 		@Override
-		public void onRequestSuccess(ShowsResponse shows) {			
-			ShowsAdapter adapter = new ShowsAdapter(outer, shows.data);
-			setListAdapter(adapter);			
-			hideProgressBar();
+		public void onRequestSuccess(ShowsResponse shows) {	
+			for (Show show : shows.data) 
+				showList.add(show);			
+			Log.e("SHOWS", "Got shows pending: " + spiceManager.getPendingRequestCount());
+			if (spiceManager.getPendingRequestCount() <= 1) {
+				Log.e("SHOWS", "No pending operations listsize " + showList.size());
+				Collections.sort(showList);
+				Log.e("SHOWS", "No pending operations listsize " + showList.size());
+				ShowsAdapter adapter = new ShowsAdapter(outer, showList);
+				setListAdapter(adapter);
+				hideProgressBar();
+			}
 			return;
 		}
 	}

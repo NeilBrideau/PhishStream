@@ -6,7 +6,6 @@ import com.octo.android.robospice.SpiceManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.ListActivity;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,8 +70,9 @@ abstract public class PhishInRestListActivity extends ListActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-        	NavUtils.navigateUpFromSameTask(this);
+        if (item.getItemId() == android.R.id.home) {        	
+        	//NavUtils.navigateUpFromSameTask(this);
+        	finish();
         	overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
             return true;
         }
