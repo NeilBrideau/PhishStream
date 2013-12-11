@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager.WifiLock;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
@@ -46,9 +47,14 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     }
     
     public void initMediaPlayer() {
-        if (mediaPlayer != null) 
-            return;
-        mediaPlayer = new MediaPlayer();
+        if (mediaPlayer == null) {    
+        	mediaPlayer = new MediaPlayer();
+        }
+        else if (mediaPlayer.isPlaying()) { 
+        	mediaPlayer.stop();
+        	mediaPlayer.reset();
+        }
+        
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnErrorListener(this);
@@ -60,9 +66,12 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public void onDestroy() {
-        if (mediaPlayer != null) 
+        if (mediaPlayer != null) {
+        	if (mediaPlayer.isPlaying())
+        		mediaPlayer.stop();
             mediaPlayer.release();
-        if (wifiLock != null) 
+        }
+        if (wifiLock != null && wifiLock.isHeld()) 
             wifiLock.release();
         mediaPlayer = null;
         return;
@@ -70,12 +79,20 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {      
-        initMediaPlayer();
-
+        
+        Log.e("PLAYER", "LOADING: " + intent.getStringExtra("URL"));
+        if (intent.getAction().equals(ACTION_STOP)) {
+        	if (mediaPlayer.isPlaying())
+        		mediaPlayer.stop();
+        	mediaPlayer.release();
+        	mediaPlayer = null;
+        	if (wifiLock != null && wifiLock.isHeld())
+        		wifiLock.release();
+        	stopSelf();
+        	return START_STICKY;
+        }
         if (intent.getAction().equals(ACTION_PLAY)) {
-            if (mediaPlayer.isPlaying()) 
-                mediaPlayer.stop();
-            
+        	initMediaPlayer();
             try {
                 mediaPlayer.setDataSource(intent.getStringExtra("URL"));
             } catch (IllegalArgumentException e) {

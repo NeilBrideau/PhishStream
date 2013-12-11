@@ -53,10 +53,8 @@ public class ShowActivity extends PhishInRestListActivity {
 		Log.e("LISTCLICK", mi.getUrl());
 		Intent i = new Intent(v.getContext(), MusicPlayerService.class);  
 		i.putExtra("URL", mi.getUrl());
-		i.setAction("PLAY");
+		i.setAction(MusicPlayerService.ACTION_PLAY);
 		startService(i);
-        //startActivity(new Intent(v.getContext(), er.getActivity()));
-        //overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
 		return;
 	}
 

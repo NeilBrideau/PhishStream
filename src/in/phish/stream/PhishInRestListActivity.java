@@ -6,6 +6,7 @@ import com.octo.android.robospice.SpiceManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -116,6 +117,12 @@ abstract public class PhishInRestListActivity extends ListActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_stop) {
+			Intent i = new Intent(getBaseContext(), MusicPlayerService.class);  
+			i.setAction(MusicPlayerService.ACTION_STOP);
+			startService(i);
+			return true;
+		}
         if (item.getItemId() == android.R.id.home) {        	
         	//NavUtils.navigateUpFromSameTask(this);
         	finish();
